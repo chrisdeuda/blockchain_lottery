@@ -84,10 +84,24 @@ describe("Lottery Contract", () => {
             assert(false); // It will always fail the test
         } catch (err) {
             // Check if there are error exists
-            console.log(err);
             assert.ok(err);
         }
-    
     })
+
+    it('only manager call pickWinner', async () =>{
+        try {
+            // It should fail and stop the execution
+            await lottery.methods.pickWinner()
+                .send({
+                    from: accounts[1], // It's not owner
+                })
+            // When the code still execute here make it failes
+            assert(false); 
+        } catch (err) {
+            // Check if there are error exists
+            assert.ok(err);
+        }
+
+    });
 
 });
