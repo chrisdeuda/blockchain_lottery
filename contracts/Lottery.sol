@@ -36,6 +36,9 @@ contract Lottery {
     }
     
     
-    
+    modifier restriced(){
+        require(msg.sender == manager);
+        _;
+    }
     
 }
