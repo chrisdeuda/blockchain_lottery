@@ -43,4 +43,51 @@ describe("Lottery Contract", () => {
 
     })
 
+    /**
+     * I want to make sure when they enter . Their address should be put in the players array
+     **/ 
+    it('allows multiple accounts to enter', async  ()=> {
+        await lottery.methods.enter().send({
+            from: accounts[0],
+            value: web3.utils.toWei('0.02', 'ether')
+        });
+
+        await lottery.methods.enter().send({
+            from: accounts[1],
+            value: web3.utils.toWei('0.02', 'ether')
+        });
+
+        await lottery.methods.enter().send({
+            from: accounts[2],
+            value: web3.utils.toWei('0.02', 'ether')
+        });
+
+        
+        const players = await lottery.methods.getPlayers().call({
+            from: accounts[0]
+        });
+
+        assert.equal( accounts[0], players[0]);
+        assert.equal( accounts[1], players[1]);
+        assert.equal( accounts[2], players[2]);
+        assert.equal(3, players.length);
+
+    })
+
+    it('requires a minimum amountn of ether to enter', async ()=> {
+        try {
+            // It should fail and stop the execution
+            await lottery.methods.send({
+                from: accounts[0],
+                value: 200 // Not trying to convert into ether
+            })
+            assert(false); // It will always fail the test
+        } catch (err) {
+            // Check if there are error exists
+            console.log(err);
+            assert.ok(err);
+        }
+    
+    })
+
 });
