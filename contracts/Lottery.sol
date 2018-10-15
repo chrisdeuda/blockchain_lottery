@@ -34,6 +34,9 @@ contract Lottery {
         // Resetting the state of the contract
         players = new address[](0);
     }
+    function getPlayers() public view returns(address[]) {
+        return players;
+    }
     
     
     modifier restriced(){
