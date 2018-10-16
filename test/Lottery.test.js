@@ -138,12 +138,33 @@ describe("Lottery Contract", () => {
                 .send({
                     from: accounts[0], // It's not owner
                 })
-
         // asserts that the players is empty
         const players = await lottery.methods.getPlayers().call({
             from: accounts[0]
         });
         assert.equal(0, players.length)
+    });
+
+    it('checks if balance is 0 after pick the winner', async () => {
+        await lottery.methods.enter().send({ from: accounts[0],
+            value: web3.utils.toWei('2', 'ether')
+        });
+        // Add two players
+        await lottery.methods.enter().send({
+            from: accounts[1],
+            value: web3.utils.toWei('0.02', 'ether')
+        });
+        
+        // Pick the winner by the manager
+        await lottery.methods.pickWinner()
+                .send({
+                    from: accounts[0], // It's not owner
+                })
+        // Get the balance of the contract
+        const contractBalance = await lottery.methods.getBalance().call({
+                from: accounts[0]
+        });
+        assert.equal(0, contractBalance)
     });
 
 });
