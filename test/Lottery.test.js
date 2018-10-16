@@ -167,4 +167,23 @@ describe("Lottery Contract", () => {
         assert.equal(0, contractBalance)
     });
 
+    it('increase balance after player enter the game', async () => {
+        let balanceInEther;
+        let contractBalance
+        contractBalance = await lottery.methods.getBalance().call({
+            from: accounts[0]
+        });
+
+        balanceInEther = web3.utils.fromWei(contractBalance, 'ether');
+
+        assert.equal(0, balanceInEther );
+        await lottery.methods.enter().send({ from: accounts[0],
+            value: web3.utils.toWei('2', 'ether')
+        });
+        contractBalance = await lottery.methods.getBalance().call({
+            from: accounts[0]
+        });
+        balanceInEther = web3.utils.fromWei(contractBalance, 'ether');
+        assert.notStrictEqual(0, balanceInEther );
+    });
 });
